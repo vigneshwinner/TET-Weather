@@ -1,0 +1,255 @@
+{
+  "api_endpoints": {
+    "base_url": "https://api.eia.gov/v2/",
+    "series_endpoint": "seriesdata/",
+    "bulk_endpoint": "bulk-download/"
+  },
+  
+  "commodities": {
+    "crude_oil": {
+      "name": "Crude Oil",
+      "unit": "Thousand Barrels",
+      "series": {
+        "inventory": {
+          "id": "PET.WCESTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Crude Oil",
+          "unit": "Thousand Barrels"
+        },
+        "production": {
+          "id": "PET.WCRFPUS2.W",
+          "description": "Weekly U.S. Field Production of Crude Oil",
+          "unit": "Thousand Barrels per Day"
+        },
+        "imports": {
+          "id": "PET.WCEIMUS2.W",
+          "description": "Weekly U.S. Imports of Crude Oil",
+          "unit": "Thousand Barrels per Day"
+        },
+        "exports": {
+          "id": "PET.WCREXUS2.W",
+          "description": "Weekly U.S. Exports of Crude Oil",
+          "unit": "Thousand Barrels per Day"
+        },
+        "refinery_inputs": {
+          "id": "PET.WCRRIUS2.W",
+          "description": "Weekly U.S. Refinery Net Input of Crude Oil",
+          "unit": "Thousand Barrels per Day"
+        },
+        "refinery_utilization": {
+          "id": "PET.WPULEUS3.W",
+          "description": "Weekly U.S. Percent Utilization of Refinery Operable Capacity",
+          "unit": "Percent"
+        },
+        "spr_stocks": {
+          "id": "PET.WCSSTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Crude Oil in SPR",
+          "unit": "Thousand Barrels"
+        },
+        "commercial_stocks": {
+          "id": "PET.WCESTUS1.W",
+          "description": "Weekly U.S. Commercial Crude Oil Stocks",
+          "unit": "Thousand Barrels"
+        }
+      }
+    },
+    
+    "natural_gas": {
+      "name": "Natural Gas",
+      "unit": "Billion Cubic Feet",
+      "series": {
+        "working_gas_inventory": {
+          "id": "NG.NW2_EPG0_SWO_R48_BCF.W",
+          "description": "Weekly Working Gas in Underground Storage",
+          "unit": "Billion Cubic Feet"
+        },
+        "total_inventory": {
+          "id": "NG.N4020US2.W",
+          "description": "Weekly Total Natural Gas in Underground Storage",
+          "unit": "Billion Cubic Feet"
+        },
+        "net_injections": {
+          "id": "NG.NW2_EPG0_SIN_R48_BCF.W",
+          "description": "Weekly Net Change in Working Gas",
+          "unit": "Billion Cubic Feet"
+        },
+        "implied_flow": {
+          "id": "NG.NW2_EPG0_SIF_R48_MMCFD.W",
+          "description": "Weekly Implied Flow",
+          "unit": "Million Cubic Feet per Day"
+        },
+        "east_region_inventory": {
+          "id": "NG.NW2_EPG0_SWO_R31_BCF.W",
+          "description": "Weekly Working Gas in East Region",
+          "unit": "Billion Cubic Feet"
+        },
+        "west_region_inventory": {
+          "id": "NG.NW2_EPG0_SWO_R32_BCF.W",
+          "description": "Weekly Working Gas in West Region",
+          "unit": "Billion Cubic Feet"
+        },
+        "producing_region_inventory": {
+          "id": "NG.NW2_EPG0_SWO_R33_BCF.W",
+          "description": "Weekly Working Gas in Producing Region",
+          "unit": "Billion Cubic Feet"
+        }
+      }
+    },
+    
+    "gasoline": {
+      "name": "Motor Gasoline",
+      "unit": "Thousand Barrels",
+      "series": {
+        "total_inventory": {
+          "id": "PET.WGTSTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Total Gasoline",
+          "unit": "Thousand Barrels"
+        },
+        "finished_inventory": {
+          "id": "PET.WGFSTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Finished Motor Gasoline",
+          "unit": "Thousand Barrels"
+        },
+        "production": {
+          "id": "PET.WGFUPUS2.W",
+          "description": "Weekly U.S. Gasoline Production",
+          "unit": "Thousand Barrels per Day"
+        },
+        "imports": {
+          "id": "PET.WGTIMUS2.W",
+          "description": "Weekly U.S. Imports of Total Gasoline",
+          "unit": "Thousand Barrels per Day"
+        },
+        "product_supplied": {
+          "id": "PET.WGFUPUS2.W",
+          "description": "Weekly U.S. Product Supplied of Finished Motor Gasoline",
+          "unit": "Thousand Barrels per Day"
+        },
+        "blending_components_inventory": {
+          "id": "PET.WBCSTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Gasoline Blending Components",
+          "unit": "Thousand Barrels"
+        },
+        "rbob_inventory": {
+          "id": "PET.W_EPM0R_SAE_NUS_MBBL.W",
+          "description": "Weekly U.S. RBOB Gasoline Inventory",
+          "unit": "Thousand Barrels"
+        }
+      }
+    },
+    
+    "distillate": {
+      "name": "Distillate Fuel Oil",
+      "unit": "Thousand Barrels",
+      "series": {
+        "inventory": {
+          "id": "PET.WDISTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Distillate Fuel Oil",
+          "unit": "Thousand Barrels"
+        },
+        "production": {
+          "id": "PET.WDIUPUS2.W",
+          "description": "Weekly U.S. Production of Distillate Fuel Oil",
+          "unit": "Thousand Barrels per Day"
+        },
+        "imports": {
+          "id": "PET.WDIIMUS2.W",
+          "description": "Weekly U.S. Imports of Distillate Fuel Oil",
+          "unit": "Thousand Barrels per Day"
+        },
+        "product_supplied": {
+          "id": "PET.WDIUPUS2.W",
+          "description": "Weekly U.S. Product Supplied of Distillate Fuel Oil",
+          "unit": "Thousand Barrels per Day"
+        }
+      }
+    },
+    
+    "jet_fuel": {
+      "name": "Kerosene-Type Jet Fuel",
+      "unit": "Thousand Barrels",
+      "series": {
+        "inventory": {
+          "id": "PET.WKJSTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Kerosene-Type Jet Fuel",
+          "unit": "Thousand Barrels"
+        },
+        "production": {
+          "id": "PET.WKJUPUS2.W",
+          "description": "Weekly U.S. Production of Kerosene-Type Jet Fuel",
+          "unit": "Thousand Barrels per Day"
+        },
+        "product_supplied": {
+          "id": "PET.WKJUPUS2.W",
+          "description": "Weekly U.S. Product Supplied of Kerosene-Type Jet Fuel",
+          "unit": "Thousand Barrels per Day"
+        }
+      }
+    },
+    
+    "propane": {
+      "name": "Propane/Propylene",
+      "unit": "Thousand Barrels",
+      "series": {
+        "inventory": {
+          "id": "PET.WPRSTUS1.W",
+          "description": "Weekly U.S. Ending Stocks of Propane/Propylene",
+          "unit": "Thousand Barrels"
+        },
+        "production": {
+          "id": "PET.WPRUPUS2.W",
+          "description": "Weekly U.S. Production of Propane/Propylene",
+          "unit": "Thousand Barrels per Day"
+        },
+        "product_supplied": {
+          "id": "PET.WPRUPUS2.W",
+          "description": "Weekly U.S. Product Supplied of Propane/Propylene",
+          "unit": "Thousand Barrels per Day"
+        }
+      }
+    }
+  },
+  
+  "regional_mappings": {
+    "padd_regions": {
+      "PADD 1": "East Coast",
+      "PADD 2": "Midwest",
+      "PADD 3": "Gulf Coast",
+      "PADD 4": "Rocky Mountain",
+      "PADD 5": "West Coast"
+    },
+    
+    "natural_gas_regions": {
+      "East": ["New England", "Middle Atlantic", "South Atlantic", "East North Central", "East South Central"],
+      "West": ["Mountain", "Pacific"],
+      "Producing": ["West South Central", "West North Central"]
+    }
+  },
+  
+  "data_quality_checks": {
+    "outlier_thresholds": {
+      "inventory_pct_change": 25,
+      "production_pct_change": 20,
+      "utilization_min": 60,
+      "utilization_max": 100
+    },
+    
+    "missing_data_threshold": 0.1,
+    
+    "expected_ranges": {
+      "crude_oil_inventory": [250000, 550000],
+      "natural_gas_inventory": [1500, 4500],
+      "gasoline_inventory": [200000, 280000],
+      "refinery_utilization": [60, 100]
+    }
+  },
+  
+  "feature_engineering": {
+    "rolling_windows": [4, 13, 26, 52],
+    "lag_periods": [1, 2, 4, 8],
+    "seasonal_adjustments": {
+      "summer_driving": [5, 6, 7, 8, 9],
+      "winter_heating": [11, 12, 1, 2, 3],
+      "shoulder_months": [4, 10]
+    }
+  }
+}
