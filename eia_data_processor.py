@@ -67,8 +67,8 @@ class EIADataFetcher:
         for df in frames[1:]:
             result = result.merge(df, on="date", how="outer")
         
-        # Standardize time format
-        result["date"] = pd.to_datetime(result["date"])
+        # Standardize time format (format='mixed' handles any date format variations)
+        result["date"] = pd.to_datetime(result["date"], format='mixed')
         result = result.sort_values("date").reset_index(drop=True)
         
         # Convert to numeric
@@ -104,6 +104,7 @@ if __name__ == "__main__":
     print("\nData ready for weather correlation analysis!")
     print("Key weather-sensitive series:")
     print("  - natgas_net_change: Weekly storage injections/withdrawals (calculated)")
+    print("  - natgas_inventory: Working gas in storage")
     print("  - distillate_inventory: Heating oil (winter demand)")
     print("  - propane_inventory: Very sensitive to cold snaps")
     print("  - gasoline_production: Summer driving season indicator")
