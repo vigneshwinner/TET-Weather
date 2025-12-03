@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """
-Supply-Stress Index (SSI) Pipeline
-===================================
-Constructs a composite Supply-Stress Index combining weather and supply pressure.
+Supply-Stress Index (SSI) Pipeline v2
+======================================
+Per-commodity SSI combining weather and supply pressure.
 
-Features combined:
-- temp_z: Standardized temperature deviation
-- precip_z: Standardized precipitation deviation  
+Features combined (per commodity):
+- temp_z: Temperature anomaly (z-score)
+- precip_z: Precipitation anomaly (z-score)
 - inv_delta_norm: Normalized inventory change
 - prod_delta_norm: Normalized production change
 - utilization_norm: Normalized utilization rate
 
-Returns: ssi_df (DataFrame with commodity, week_start, ssi_value), loadings (DataFrame)
+Returns: ssi_df (DataFrame), loadings_dict (dict of DataFrames per commodity)
 """
 
 import pandas as pd
@@ -30,6 +30,11 @@ warnings.filterwarnings('ignore')
 # Configuration
 VARIANCE_THRESHOLD = 0.85
 EIA_API_KEY = 'JMlLALgGbXN9BT2khJUocOZzsuJsdGTACakEAEn8'
+
+FEATURE_COLS = [
+    'temp_z', 'precip_z',
+    'inv_delta_norm', 'prod_delta_norm', 'utilization_norm'
+]
 
 
 # =============================================================================
@@ -54,9 +59,10 @@ def aggregate_weather_weekly(weather_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def compute_weather_anomalies(weekly_weather: pd.DataFrame) -> pd.DataFrame:
-    """Compute temperature and precipitation anomalies (z-scores) from seasonal norms."""
+    """Compute temperature and precipitation anomalies (z-scores)."""
     
     df = weekly_weather.copy()
+    df = df.sort_values('week_start').reset_index(drop=True)
     df['week_of_year'] = df['week_start'].dt.isocalendar().week
     
     seasonal_stats = df.groupby('week_of_year').agg({
@@ -68,9 +74,11 @@ def compute_weather_anomalies(weekly_weather: pd.DataFrame) -> pd.DataFrame:
     
     df = df.merge(seasonal_stats, on='week_of_year', how='left')
     
+    # Compute z-scores
     df['temp_z'] = (df['temp_avg_c'] - df['temp_mean']) / df['temp_std'].replace(0, 1)
     df['precip_z'] = (df['precipitation_mm'] - df['precip_mean']) / df['precip_std'].replace(0, 1)
     
+    # Handle infinities
     df['temp_z'] = df['temp_z'].replace([np.inf, -np.inf], np.nan).fillna(0)
     df['precip_z'] = df['precip_z'].replace([np.inf, -np.inf], np.nan).fillna(0)
     
@@ -140,6 +148,7 @@ def process_commodity_data(eia_df: pd.DataFrame) -> pd.DataFrame:
     
     result = pd.concat(all_commodities, ignore_index=True)
     
+    # Normalize features within each commodity
     for commodity in result['commodity'].unique():
         mask = result['commodity'] == commodity
         
@@ -161,127 +170,162 @@ def process_commodity_data(eia_df: pd.DataFrame) -> pd.DataFrame:
 
 def merge_weather_and_supply(weather_df: pd.DataFrame, supply_df: pd.DataFrame) -> pd.DataFrame:
     """Merge weather anomalies with supply data."""
-    return supply_df.merge(
-        weather_df[['week_start', 'temp_z', 'precip_z']],
-        on='week_start',
-        how='inner'
-    )
+    weather_cols = ['week_start', 'temp_z', 'precip_z']
+    return supply_df.merge(weather_df[weather_cols], on='week_start', how='inner')
 
 
 # =============================================================================
-# SSI COMPUTATION
+# PER-COMMODITY SSI COMPUTATION
 # =============================================================================
 
-def compute_ssi(df: pd.DataFrame, variance_threshold: float = 0.85) -> tuple:
+def compute_ssi_per_commodity(df: pd.DataFrame, variance_threshold: float = 0.85) -> tuple:
     """
-    Compute Supply-Stress Index using PCA.
+    Compute Supply-Stress Index separately for each commodity.
     
-    Returns: (df_with_ssi, loadings, explained_variance, n_components)
+    Returns: (df_with_ssi, loadings_dict, variance_dict)
     """
     
-    feature_cols = ['temp_z', 'precip_z', 'inv_delta_norm', 'prod_delta_norm', 'utilization_norm']
-    
-    for col in feature_cols:
-        if col not in df.columns:
-            df[col] = 0
-    
-    df[feature_cols] = df[feature_cols].fillna(0)
-    X = df[feature_cols].values
-    
-    pca_full = PCA()
-    pca_full.fit(X)
-    
-    cumulative_var = np.cumsum(pca_full.explained_variance_ratio_)
-    n_components = np.argmax(cumulative_var >= variance_threshold) + 1
-    n_components = max(1, min(n_components, len(feature_cols)))
+    commodities = df['commodity'].unique()
+    all_results = []
+    loadings_dict = {}
+    variance_dict = {}
     
     print(f"\n{'='*60}")
-    print("PCA ANALYSIS")
+    print("PER-COMMODITY PCA ANALYSIS")
     print(f"{'='*60}")
-    print(f"\nVariance explained:")
-    for i, var in enumerate(pca_full.explained_variance_ratio_):
-        marker = "←" if i < n_components else ""
-        print(f"  PC{i+1}: {var*100:.2f}% (cumulative: {cumulative_var[i]*100:.2f}%) {marker}")
-    print(f"\nRetaining {n_components} component(s) explaining {cumulative_var[n_components-1]*100:.2f}% variance")
     
-    pca = PCA(n_components=n_components)
-    principal_components = pca.fit_transform(X)
-    pc1 = principal_components[:, 0]
+    for commodity in commodities:
+        print(f"\n--- {commodity} ---")
+        
+        comm_df = df[df['commodity'] == commodity].copy()
+        comm_df = comm_df.sort_values('week_start').reset_index(drop=True)
+        
+        # Determine which features are available for this commodity
+        available_features = []
+        for col in FEATURE_COLS:
+            if col in comm_df.columns:
+                # Check if column has meaningful variance
+                if comm_df[col].notna().sum() > 1 and comm_df[col].std() > 0.01:
+                    available_features.append(col)
+                    comm_df[col] = comm_df[col].fillna(0)
+                else:
+                    comm_df[col] = 0
+            else:
+                comm_df[col] = 0
+        
+        # Need at least 2 features for PCA
+        if len(available_features) < 2:
+            print(f"  Skipping: insufficient features ({available_features})")
+            comm_df['ssi_value'] = 0
+            all_results.append(comm_df)
+            continue
+        
+        print(f"  Features used: {available_features}")
+        
+        # Drop rows with NaN in any feature (from lagging)
+        comm_df = comm_df.dropna(subset=available_features)
+        
+        if len(comm_df) < 10:
+            print(f"  Skipping: insufficient data ({len(comm_df)} rows)")
+            comm_df['ssi_value'] = 0
+            all_results.append(comm_df)
+            continue
+        
+        X = comm_df[available_features].values
+        
+        # Fit PCA
+        pca_full = PCA()
+        pca_full.fit(X)
+        
+        cumulative_var = np.cumsum(pca_full.explained_variance_ratio_)
+        n_components = np.argmax(cumulative_var >= variance_threshold) + 1
+        n_components = max(1, min(n_components, len(available_features)))
+        
+        print(f"  Variance: PC1={pca_full.explained_variance_ratio_[0]*100:.1f}%, "
+              f"cumulative({n_components})={cumulative_var[n_components-1]*100:.1f}%")
+        
+        pca = PCA(n_components=n_components)
+        principal_components = pca.fit_transform(X)
+        pc1 = principal_components[:, 0]
+        
+        # Create loadings DataFrame
+        loadings = pd.DataFrame(
+            pca.components_.T,
+            columns=[f'PC{i+1}' for i in range(n_components)],
+            index=available_features
+        )
+        
+        # Sign adjustment based on stress interpretation
+        stress_direction = {
+            'temp_z': 1,           # Higher temp = stress
+            'precip_z': -1,        # Lower precip = stress (drought)
+            'inv_delta_norm': -1,  # Declining inventory = stress
+            'prod_delta_norm': -1, # Declining production = stress
+            'utilization_norm': 1  # Higher utilization = stress
+        }
+        
+        direction_score = sum(
+            loadings.loc[feat, 'PC1'] * stress_direction.get(feat, 0) 
+            for feat in available_features if feat in stress_direction
+        )
+        sign_adj = 1 if direction_score >= 0 else -1
+        
+        comm_df['ssi_value'] = pc1 * sign_adj
+        loadings['PC1'] = loadings['PC1'] * sign_adj
+        
+        print(f"  Sign adjustment: {sign_adj}")
+        
+        # Store results
+        all_results.append(comm_df)
+        loadings_dict[commodity] = loadings
+        variance_dict[commodity] = pca_full.explained_variance_ratio_
     
-    loadings = pd.DataFrame(
-        pca.components_.T,
-        columns=[f'PC{i+1}' for i in range(n_components)],
-        index=feature_cols
-    )
+    # Combine all commodities
+    result_df = pd.concat(all_results, ignore_index=True)
     
-    stress_direction = {
-        'temp_z': 1,
-        'precip_z': -1,
-        'inv_delta_norm': -1,
-        'prod_delta_norm': -1,
-        'utilization_norm': 1
-    }
-    
-    direction_score = sum(loadings.loc[feat, 'PC1'] * stress_direction.get(feat, 0) for feat in feature_cols)
-    sign_adj = 1 if direction_score >= 0 else -1
-    
-    df = df.copy()
-    df['ssi_value'] = pc1 * sign_adj
-    loadings['PC1'] = loadings['PC1'] * sign_adj
-    
-    print(f"\nSign adjustment: {sign_adj} (positive SSI = higher stress)")
-    
-    return df, loadings, pca_full.explained_variance_ratio_, n_components
+    return result_df, loadings_dict, variance_dict
 
 
 # =============================================================================
-# VISUALIZATION (displays inline, no saving)
+# VISUALIZATION
 # =============================================================================
 
-def plot_component_loadings(loadings: pd.DataFrame):
-    """Bar chart of PC1 loadings."""
-    plt.figure(figsize=(10, 6))
+def plot_loadings_comparison(loadings_dict: dict):
+    """Bar chart comparing PC1 loadings across commodities."""
     
-    colors = ['#e74c3c' if x > 0 else '#3498db' for x in loadings['PC1']]
-    bars = plt.barh(loadings.index, loadings['PC1'], color=colors, edgecolor='black')
+    # Get all unique features across commodities
+    all_features = set()
+    for loadings in loadings_dict.values():
+        all_features.update(loadings.index.tolist())
+    all_features = sorted(all_features)
     
-    plt.axvline(x=0, color='black', linewidth=0.8)
-    plt.xlabel('Loading on PC1 (Sign-Adjusted)', fontsize=12)
-    plt.ylabel('Features', fontsize=12)
-    plt.title('SSI Component Loadings\n(Red = Increases Stress, Blue = Decreases Stress)', fontsize=13)
+    n_commodities = len(loadings_dict)
+    fig, axes = plt.subplots(1, n_commodities, figsize=(4 * n_commodities, 6), sharey=True)
     
-    for bar, val in zip(bars, loadings['PC1']):
-        plt.text(val + 0.02 if val >= 0 else val - 0.02,
-                 bar.get_y() + bar.get_height()/2,
-                 f'{val:.3f}', ha='left' if val >= 0 else 'right', va='center', fontsize=10)
+    if n_commodities == 1:
+        axes = [axes]
     
-    plt.tight_layout()
-    plt.show()
-
-
-def plot_variance_explained(explained_var: np.ndarray, n_retained: int):
-    """Variance explained bar chart."""
-    plt.figure(figsize=(10, 5))
+    for ax, (commodity, loadings) in zip(axes, loadings_dict.items()):
+        features = loadings.index.tolist()
+        values = loadings['PC1'].values
+        
+        colors = ['#e74c3c' if v > 0 else '#3498db' for v in values]
+        bars = ax.barh(features, values, color=colors, edgecolor='black')
+        
+        ax.axvline(x=0, color='black', linewidth=0.8)
+        ax.set_xlabel('PC1 Loading')
+        ax.set_title(f'{commodity}', fontsize=11, fontweight='bold')
+        
+        # Add value labels
+        for bar, val in zip(bars, values):
+            ax.text(val + 0.02 if val >= 0 else val - 0.02,
+                   bar.get_y() + bar.get_height()/2,
+                   f'{val:.2f}', ha='left' if val >= 0 else 'right', 
+                   va='center', fontsize=8)
     
-    n_comp = len(explained_var)
-    x = np.arange(1, n_comp + 1)
-    colors = ['#27ae60' if i < n_retained else '#bdc3c7' for i in range(n_comp)]
-    
-    bars = plt.bar(x, explained_var * 100, color=colors, edgecolor='black')
-    
-    cumulative = np.cumsum(explained_var) * 100
-    plt.plot(x, cumulative, 'ro-', linewidth=2, markersize=8, label='Cumulative')
-    plt.axhline(y=85, color='red', linestyle='--', alpha=0.7, label='85% Threshold')
-    
-    plt.xlabel('Principal Component', fontsize=12)
-    plt.ylabel('Variance Explained (%)', fontsize=12)
-    plt.title('PCA Variance Explained (Green = Retained)', fontsize=13)
-    plt.xticks(x)
-    plt.legend(loc='right')
-    
-    for bar, val in zip(bars, explained_var * 100):
-        plt.text(bar.get_x() + bar.get_width()/2, val + 1, f'{val:.1f}%', ha='center', va='bottom', fontsize=9)
-    
+    axes[0].set_ylabel('Features')
+    fig.suptitle('SSI Component Loadings by Commodity\n(Red = Increases Stress)', 
+                 fontsize=13, fontweight='bold')
     plt.tight_layout()
     plt.show()
 
@@ -332,7 +376,8 @@ def plot_ssi_heatmap(df: pd.DataFrame):
     n_dates = len(pivot.columns)
     step = max(1, n_dates // 12)
     ax.set_xticks(np.arange(0, n_dates, step))
-    ax.set_xticklabels([pivot.columns[i].strftime('%Y-%m') for i in range(0, n_dates, step)], rotation=45, ha='right')
+    ax.set_xticklabels([pivot.columns[i].strftime('%Y-%m') for i in range(0, n_dates, step)], 
+                       rotation=45, ha='right')
     
     plt.colorbar(im, label='SSI Value', ax=ax)
     ax.set_xlabel('Week', fontsize=12)
@@ -349,7 +394,7 @@ def plot_ssi_heatmap(df: pd.DataFrame):
 
 def run_ssi_pipeline(weather_years=2, show_plots=True):
     """
-    Main pipeline to construct Supply-Stress Index.
+    Main pipeline to construct per-commodity Supply-Stress Index.
     
     Args:
         weather_years: Years of weather data to fetch
@@ -357,11 +402,12 @@ def run_ssi_pipeline(weather_years=2, show_plots=True):
     
     Returns:
         ssi_df: DataFrame with columns [commodity, week_start, ssi_value]
-        loadings: DataFrame with PCA component loadings
+        loadings_dict: Dict of DataFrames with PCA loadings per commodity
     """
     
     print("="*60)
-    print("SUPPLY-STRESS INDEX (SSI) PIPELINE")
+    print("SUPPLY-STRESS INDEX (SSI) PIPELINE v2")
+    print("Per-Commodity Analysis")
     print("="*60)
     
     # =========================================================================
@@ -393,20 +439,19 @@ def run_ssi_pipeline(weather_years=2, show_plots=True):
     # =========================================================================
     # STEP 3: Merge & Compute SSI
     # =========================================================================
-    print("\n[4/5] Merging and computing SSI...")
+    print("\n[4/5] Merging and computing per-commodity SSI...")
     merged_df = merge_weather_and_supply(weather_anomalies, commodity_df)
     print(f"  Merged records: {len(merged_df)}")
     print(f"  Date range: {merged_df['week_start'].min().date()} to {merged_df['week_start'].max().date()}")
     
-    ssi_df, loadings, explained_var, n_components = compute_ssi(merged_df, VARIANCE_THRESHOLD)
+    ssi_df, loadings_dict, variance_dict = compute_ssi_per_commodity(merged_df, VARIANCE_THRESHOLD)
     
     # =========================================================================
     # STEP 4: Visualize
     # =========================================================================
     if show_plots:
         print("\n[5/5] Generating visualizations...")
-        plot_component_loadings(loadings)
-        plot_variance_explained(explained_var, n_components)
+        plot_loadings_comparison(loadings_dict)
         plot_ssi_timeseries(ssi_df)
         plot_ssi_heatmap(ssi_df)
     
@@ -420,6 +465,19 @@ def run_ssi_pipeline(weather_years=2, show_plots=True):
     print(summary)
     
     print("\n" + "="*60)
+    print("WEATHER FEATURE IMPORTANCE (PC1 Loadings)")
+    print("="*60)
+    for commodity, loadings in loadings_dict.items():
+        weather_features = [f for f in loadings.index if 'temp' in f or 'precip' in f]
+        if weather_features:
+            weather_loadings = loadings.loc[weather_features, 'PC1']
+            total_weather = np.abs(weather_loadings).sum()
+            print(f"\n{commodity}:")
+            for feat in weather_features:
+                print(f"  {feat}: {loadings.loc[feat, 'PC1']:.3f}")
+            print(f"  Total weather impact: {total_weather:.3f}")
+    
+    print("\n" + "="*60)
     print("SSI PIPELINE COMPLETE!")
     print("="*60)
     
@@ -427,14 +485,16 @@ def run_ssi_pipeline(weather_years=2, show_plots=True):
     output_df = ssi_df[['commodity', 'week_start', 'ssi_value']].copy()
     output_df = output_df.sort_values(['commodity', 'week_start']).reset_index(drop=True)
     
-    return output_df, loadings
+    return output_df, loadings_dict
 
 
 if __name__ == "__main__":
-    ssi_df, loadings = run_ssi_pipeline()
+    ssi_df, loadings_dict = run_ssi_pipeline()
     
     print("\n\nReturned DataFrames:")
-    print("\nssi_df.head():")
+    print("\nssi_df.head(10):")
     print(ssi_df.head(10))
-    print("\nloadings:")
-    print(loadings)
+    print("\nLoadings per commodity:")
+    for commodity, loadings in loadings_dict.items():
+        print(f"\n{commodity}:")
+        print(loadings)
