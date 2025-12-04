@@ -44,7 +44,7 @@ output_dir.mkdir(exist_ok=True)
 
 print("\n📊 Creating performance over time plots...")
 
-fig, axes = plt.subplots(3, 2, figsize=(16, 12))
+fig, axes = plt.subplots(5, 2, figsize=(16, 20))
 fig.suptitle('Model Performance Over Time: Baseline Ridge vs XGBoost', fontsize=16, fontweight='bold')
 
 commodities = baseline_results['commodity'].unique()
@@ -88,7 +88,7 @@ print(f"  ✓ Saved: {output_dir / 'performance_over_time.png'}")
 
 print("\n📊 Creating predicted vs actual plots...")
 
-fig, axes = plt.subplots(3, 2, figsize=(16, 12))
+fig, axes = plt.subplots(5, 2, figsize=(16, 20))
 fig.suptitle('Predicted vs Actual Returns: Baseline Ridge vs XGBoost', fontsize=16, fontweight='bold')
 
 for idx, commodity in enumerate(commodities):
@@ -129,7 +129,7 @@ print(f"  ✓ Saved: {output_dir / 'predicted_vs_actual.png'}")
 
 print("\n📊 Creating time series plots...")
 
-fig, axes = plt.subplots(3, 1, figsize=(16, 12))
+fig, axes = plt.subplots(5, 1, figsize=(16, 20))
 fig.suptitle('Return Predictions Time Series: Baseline Ridge vs XGBoost', fontsize=16, fontweight='bold')
 
 for idx, commodity in enumerate(commodities):
@@ -162,7 +162,7 @@ print("\n📊 Creating confusion matrices...")
 
 from sklearn.metrics import confusion_matrix
 
-fig, axes = plt.subplots(3, 2, figsize=(12, 14))
+fig, axes = plt.subplots(5, 2, figsize=(12, 22))
 fig.suptitle('Direction Prediction Confusion Matrices', fontsize=16, fontweight='bold')
 
 for idx, commodity in enumerate(commodities):
@@ -208,7 +208,7 @@ with open(xgb_dir / 'feature_importance.json', 'r') as f:
 # Load coefficients from Ridge artifacts
 import joblib
 
-fig, axes = plt.subplots(3, 2, figsize=(16, 14))
+fig, axes = plt.subplots(5, 2, figsize=(16, 22))
 fig.suptitle('Feature Importance: Ridge Coefficients vs XGBoost Gain', fontsize=16, fontweight='bold')
 
 for idx, commodity in enumerate(commodities):
@@ -217,7 +217,7 @@ for idx, commodity in enumerate(commodities):
     if artifacts_files:
         last_artifact = joblib.load(artifacts_files[-1])
         feature_names = last_artifact['feature_names']
-        coefficients = last_artifact['reg_model'].coef_
+        coefficients = last_artifact['reg_coefficients']
         
         coef_df = pd.DataFrame({
             'feature': feature_names,
@@ -259,7 +259,7 @@ print(f"  ✓ Saved: {output_dir / 'feature_importance.png'}")
 
 print("\n📊 Creating error distribution plots...")
 
-fig, axes = plt.subplots(3, 2, figsize=(16, 12))
+fig, axes = plt.subplots(5, 2, figsize=(16, 20))
 fig.suptitle('Distribution of Prediction Errors', fontsize=16, fontweight='bold')
 
 for idx, commodity in enumerate(commodities):

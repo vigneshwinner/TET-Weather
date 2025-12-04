@@ -4,6 +4,7 @@
     "type": "gain",
     "importance": [
       {
+<<<<<<< HEAD
         "feature": "wind_z_x_crude_prod_delta",
         "gain": 0.0006997809978201985
       },
@@ -82,6 +83,86 @@
       {
         "feature": "distillate_production",
         "gain": 0.00033925645402632654
+=======
+        "feature": "temp_z_x_utilization",
+        "gain": 0.0007671488565392792
+      },
+      {
+        "feature": "precip_z_x_crude_inv_delta",
+        "gain": 0.0006286492571234703
+      },
+      {
+        "feature": "temp_z_lag1_x_natgas_inv_delta",
+        "gain": 0.0005577675765380263
+      },
+      {
+        "feature": "temp_z_x_crude_prod_delta",
+        "gain": 0.0005576794501394033
+      },
+      {
+        "feature": "util_delta",
+        "gain": 0.000540452660061419
+      },
+      {
+        "feature": "precip_z_lag1_x_crude_prod_delta",
+        "gain": 0.0005303318612277508
+      },
+      {
+        "feature": "temp_z_x_gasoline_inv_delta",
+        "gain": 0.0005004758713766932
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "gain": 0.0004965785192325711
+      },
+      {
+        "feature": "gasoline_prod_delta",
+        "gain": 0.00046120097977109253
+      },
+      {
+        "feature": "distillate_inventory",
+        "gain": 0.00043518870370462537
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.0004292195662856102
+      },
+      {
+        "feature": "propane_inventory",
+        "gain": 0.00039131901576183736
+      },
+      {
+        "feature": "wind_z_x_crude_prod_delta",
+        "gain": 0.00038984103593975306
+      },
+      {
+        "feature": "gasoline_production",
+        "gain": 0.00038408045656979084
+      },
+      {
+        "feature": "temp_z_x_gasoline_prod_delta",
+        "gain": 0.00037806856562383473
+      },
+      {
+        "feature": "temp_z_x_natgas_inv_delta",
+        "gain": 0.00037053163396194577
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.0003548498498275876
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "gain": 0.00035441279760561883
+      },
+      {
+        "feature": "distillate_inv_delta",
+        "gain": 0.0003445556212682277
+      },
+      {
+        "feature": "temp_z_lag1",
+        "gain": 0.00034161825897172093
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       }
     ]
   },
@@ -91,6 +172,7 @@
     "importance": [
       {
         "feature": "util_delta",
+<<<<<<< HEAD
         "shap_importance": 0.000922230479773134
       },
       {
@@ -168,6 +250,85 @@
       {
         "feature": "natgas_net_change",
         "shap_importance": 0.00027992279501631856
+=======
+        "shap_importance": 0.001174274948425591
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "shap_importance": 0.0009687424753792584
+      },
+      {
+        "feature": "temp_z_x_gasoline_inv_delta",
+        "shap_importance": 0.0008226631907746196
+      },
+      {
+        "feature": "temp_z_x_gasoline_prod_delta",
+        "shap_importance": 0.0005847230786457658
+      },
+      {
+        "feature": "crude_imports",
+        "shap_importance": 0.0005386563716456294
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.00048472199705429375
+      },
+      {
+        "feature": "distillate_inventory",
+        "shap_importance": 0.0004588220617733896
+      },
+      {
+        "feature": "temp_z_lag1",
+        "shap_importance": 0.00037256721407175064
+      },
+      {
+        "feature": "precip_z_x_crude_inv_delta",
+        "shap_importance": 0.00037146895192563534
+      },
+      {
+        "feature": "crude_inventory",
+        "shap_importance": 0.00037040270399302244
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.00036568185896612704
+      },
+      {
+        "feature": "gasoline_prod_delta",
+        "shap_importance": 0.00034504002542234957
+      },
+      {
+        "feature": "precip_z_lag1_x_crude_prod_delta",
+        "shap_importance": 0.0003229506255593151
+      },
+      {
+        "feature": "gasoline_production",
+        "shap_importance": 0.0003018067800439894
+      },
+      {
+        "feature": "wind_z_x_crude_prod_delta",
+        "shap_importance": 0.0003006228944286704
+      },
+      {
+        "feature": "distillate_inv_delta",
+        "shap_importance": 0.0003000212600454688
+      },
+      {
+        "feature": "precipitation_mm_z",
+        "shap_importance": 0.0002880746906157583
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "shap_importance": 0.00028418595320545137
+      },
+      {
+        "feature": "temp_avg_c_z",
+        "shap_importance": 0.00028243413544259965
+      },
+      {
+        "feature": "temp_z_lag1_x_natgas_inv_delta",
+        "shap_importance": 0.0002777152112685144
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       }
     ]
   },
@@ -177,6 +338,7 @@
     "importance": [
       {
         "feature": "cdd_weekly_sum",
+<<<<<<< HEAD
         "gain": 0.0069684553891420364
       },
       {
@@ -426,6 +588,257 @@
       {
         "feature": "crude_inv_delta",
         "gain": 0.3135586380958557
+=======
+        "gain": 0.005487156566232443
+      },
+      {
+        "feature": "precip_z_lag1",
+        "gain": 0.005269267130643129
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.005033914931118488
+      },
+      {
+        "feature": "natgas_inv_delta",
+        "gain": 0.00497825862839818
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.004620169755071402
+      },
+      {
+        "feature": "precip_z_lag1_x_crude_prod_delta",
+        "gain": 0.004319968167692423
+      },
+      {
+        "feature": "gasoline_production",
+        "gain": 0.0040235454216599464
+      },
+      {
+        "feature": "propane_inventory",
+        "gain": 0.003996344283223152
+      },
+      {
+        "feature": "temp_max_z_x_utilization",
+        "gain": 0.003974678460508585
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "gain": 0.003863253630697727
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 0.0038264235481619835
+      },
+      {
+        "feature": "precip_z_x_natgas_inv_delta",
+        "gain": 0.003798206802457571
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "gain": 0.0037108517717570066
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "gain": 0.003704280126839876
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.0037021557800471783
+      },
+      {
+        "feature": "crude_inv_delta",
+        "gain": 0.0036404805723577738
+      },
+      {
+        "feature": "hdd_weekly_sum",
+        "gain": 0.0036399010568857193
+      },
+      {
+        "feature": "temp_z_x_gasoline_inv_delta",
+        "gain": 0.0035717012360692024
+      },
+      {
+        "feature": "temp_z_x_crude_prod_delta",
+        "gain": 0.003527572378516197
+      },
+      {
+        "feature": "refinery_utilization",
+        "gain": 0.0034958499018102884
+      }
+    ]
+  },
+  {
+    "commodity": "Henry_Hub",
+    "type": "shap",
+    "importance": [
+      {
+        "feature": "precipitation_mm_z",
+        "shap_importance": 0.0031439736485481262
+      },
+      {
+        "feature": "precip_z_x_natgas_inv_delta",
+        "shap_importance": 0.002064363332465291
+      },
+      {
+        "feature": "distillate_inv_delta",
+        "shap_importance": 0.0015758512308821082
+      },
+      {
+        "feature": "refinery_utilization",
+        "shap_importance": 0.0012385810259729624
+      },
+      {
+        "feature": "crude_inventory",
+        "shap_importance": 0.0012199630727991462
+      },
+      {
+        "feature": "temp_avg_c_z",
+        "shap_importance": 0.0011991789797320962
+      },
+      {
+        "feature": "distillate_inventory",
+        "shap_importance": 0.0011495965300127864
+      },
+      {
+        "feature": "crude_imports",
+        "shap_importance": 0.0011469178134575486
+      },
+      {
+        "feature": "gasoline_inventory",
+        "shap_importance": 0.0010882021160796285
+      },
+      {
+        "feature": "precip_z_lag1",
+        "shap_importance": 0.0010403599590063095
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.0010155822383239865
+      },
+      {
+        "feature": "gasoline_production",
+        "shap_importance": 0.0009894511895254254
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "shap_importance": 0.0009124643984250724
+      },
+      {
+        "feature": "util_delta",
+        "shap_importance": 0.0009073943947441876
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "shap_importance": 0.0009062578901648521
+      },
+      {
+        "feature": "crude_production",
+        "shap_importance": 0.0008784406236372888
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.0008707237429916859
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "shap_importance": 0.0008699854370206594
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "shap_importance": 0.0008542318246327341
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "shap_importance": 0.0008498883107677102
+      }
+    ]
+  },
+  {
+    "commodity": "Power",
+    "type": "gain",
+    "importance": [
+      {
+        "feature": "gasoline_prod_delta",
+        "gain": 1.4734920263290405
+      },
+      {
+        "feature": "temp_z_x_gasoline_inv_delta",
+        "gain": 0.9103691577911377
+      },
+      {
+        "feature": "util_delta",
+        "gain": 0.8729753494262695
+      },
+      {
+        "feature": "temp_z_x_utilization",
+        "gain": 0.8605494499206543
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "gain": 0.8517266511917114
+      },
+      {
+        "feature": "temp_max_z_x_utilization",
+        "gain": 0.8056408166885376
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.7034839987754822
+      },
+      {
+        "feature": "temp_z_lag1",
+        "gain": 0.6678023338317871
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "gain": 0.6664247512817383
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.6575093269348145
+      },
+      {
+        "feature": "temp_z_lag1_x_natgas_inv_delta",
+        "gain": 0.6409494876861572
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.6336187124252319
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "gain": 0.6142336130142212
+      },
+      {
+        "feature": "crude_inv_delta",
+        "gain": 0.6125390529632568
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 0.5914783477783203
+      },
+      {
+        "feature": "distillate_inventory",
+        "gain": 0.5788533687591553
+      },
+      {
+        "feature": "natgas_inv_delta",
+        "gain": 0.567060649394989
+      },
+      {
+        "feature": "refinery_utilization",
+        "gain": 0.5625317692756653
+      },
+      {
+        "feature": "precip_z_lag1",
+        "gain": 0.5525572896003723
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.5480408072471619
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       }
     ]
   },
@@ -434,6 +847,7 @@
     "type": "shap",
     "importance": [
       {
+<<<<<<< HEAD
         "feature": "hdd_30day_avg",
         "shap_importance": 0.005237017758190632
       },
@@ -512,6 +926,86 @@
       {
         "feature": "crude_imports",
         "shap_importance": 0.0015504868933930993
+=======
+        "feature": "solar_radiation_kwh_m2_z",
+        "shap_importance": 0.009122849442064762
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "shap_importance": 0.00874988455325365
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "shap_importance": 0.007659179624170065
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.007437066175043583
+      },
+      {
+        "feature": "distillate_inv_delta",
+        "shap_importance": 0.005378956440836191
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.005276038311421871
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "shap_importance": 0.005127906333655119
+      },
+      {
+        "feature": "gasoline_inventory",
+        "shap_importance": 0.005056541413068771
+      },
+      {
+        "feature": "precip_z_x_gasoline_prod_delta",
+        "shap_importance": 0.004755343310534954
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "shap_importance": 0.004725723993033171
+      },
+      {
+        "feature": "temp_z_x_natgas_inv_delta",
+        "shap_importance": 0.0046281032264232635
+      },
+      {
+        "feature": "hdd_weekly_sum",
+        "shap_importance": 0.004567358642816544
+      },
+      {
+        "feature": "temp_z_lag1_x_natgas_inv_delta",
+        "shap_importance": 0.004378921817988157
+      },
+      {
+        "feature": "precipitation_mm_z",
+        "shap_importance": 0.004317423794418573
+      },
+      {
+        "feature": "gasoline_inv_delta",
+        "shap_importance": 0.004313461482524872
+      },
+      {
+        "feature": "temp_avg_c_z",
+        "shap_importance": 0.004286857321858406
+      },
+      {
+        "feature": "temp_min_c_z",
+        "shap_importance": 0.004283605609089136
+      },
+      {
+        "feature": "temp_min_z_x_natgas_inv_delta",
+        "shap_importance": 0.0038985894061625004
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "shap_importance": 0.0038945891428738832
+      },
+      {
+        "feature": "temp_z_x_util_delta",
+        "shap_importance": 0.003663055831566453
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       }
     ]
   },
@@ -521,6 +1015,7 @@
     "importance": [
       {
         "feature": "hdd_weekly_sum",
+<<<<<<< HEAD
         "gain": 0.00016778222925495356
       },
       {
@@ -550,6 +1045,37 @@
       {
         "feature": "cdd_30day_avg",
         "gain": 8.628687646705657e-05
+=======
+        "gain": 0.0001665841118665412
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "gain": 0.00015865555906202644
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.0001410822878824547
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.00011937375529669225
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.00010499847121536732
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "gain": 0.00010155050404137
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 9.044789476320148e-05
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 9.020785364555195e-05
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       }
     ]
   },
@@ -559,6 +1085,7 @@
     "importance": [
       {
         "feature": "hdd_weekly_sum",
+<<<<<<< HEAD
         "shap_importance": 0.0016073401784524322
       },
       {
@@ -588,6 +1115,37 @@
       {
         "feature": "cdd_30day_avg",
         "shap_importance": 0.0003305364225525409
+=======
+        "shap_importance": 0.0016453551361337304
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "shap_importance": 0.0009106660145334899
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "shap_importance": 0.0007150925230234861
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "shap_importance": 0.0006081112078391016
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "shap_importance": 0.0005918684764765203
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "shap_importance": 0.0004984474508091807
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "shap_importance": 0.00047557990183122456
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "shap_importance": 0.00033530473592691123
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       },
       {
         "feature": "crude_imports",
@@ -645,6 +1203,7 @@
     "importance": [
       {
         "feature": "cdd_weekly_sum",
+<<<<<<< HEAD
         "gain": 0.0002973648952320218
       },
       {
@@ -674,6 +1233,37 @@
       {
         "feature": "hdd_weekly_sum",
         "gain": 8.311738929478452e-05
+=======
+        "gain": 0.0003088888479396701
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "gain": 0.00019826952484436333
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.0001929385180119425
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.0001683821901679039
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 0.0001678836124483496
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.00016733970551285893
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.00012735866766888648
+      },
+      {
+        "feature": "hdd_weekly_sum",
+        "gain": 7.970113074406981e-05
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       }
     ]
   },
@@ -682,6 +1272,7 @@
     "type": "shap",
     "importance": [
       {
+<<<<<<< HEAD
         "feature": "cdd_7day_avg",
         "shap_importance": 0.001735241268761456
       },
@@ -712,6 +1303,38 @@
       {
         "feature": "hdd_30day_avg",
         "shap_importance": 0.0007944609387777746
+=======
+        "feature": "cdd_weekly_sum",
+        "shap_importance": 0.0017365370877087116
+      },
+      {
+        "feature": "hdd_weekly_sum",
+        "shap_importance": 0.0013991505838930607
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "shap_importance": 0.0013210853794589639
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "shap_importance": 0.0011319180484861135
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "shap_importance": 0.001117900013923645
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "shap_importance": 0.0011092688655480742
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "shap_importance": 0.0009177400497719646
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "shap_importance": 0.0007883431389927864
+>>>>>>> d203cf660244b6a16cfd6c46bca533eb807db81e
       },
       {
         "feature": "crude_imports",
