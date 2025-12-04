@@ -1,0 +1,2 @@
+model,total_return,cagr,annualized_volatility,sharpe_ratio,sortino_ratio,max_drawdown,avg_drawdown_length_weeks,hit_ratio,weekly_turnover,annual_turnover,n_weeks,n_years
+ridge_baseline,3.0439185787402563,0.11087158133006025,2.259170896379278,0.10139329648515885,0.11302008429978327,-1.6731326383401326,171.5,0.40665701881331406,0.426917510853835,22.19971056439942,691,13.288461538461538

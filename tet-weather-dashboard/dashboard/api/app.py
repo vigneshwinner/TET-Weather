@@ -21,7 +21,7 @@ CORS(app)
 # ============================================================================
 
 BASE_DIR = Path(__file__).parent.parent  # Assumes api/ is in dashboard/
-DATA_DIR = BASE_DIR.parent  # Go up to TET-Weather root
+DATA_DIR = BASE_DIR.parent.parent  # Go up to TET-Weather root (tet-weather-dashboard/dashboard/ -> tet-weather-dashboard/ -> TET-Weather/)
 
 # Data file paths (relative to TET-Weather root)
 PREDICTIONS_FILE = DATA_DIR / 'reports' / 'oos_predictions.csv'
