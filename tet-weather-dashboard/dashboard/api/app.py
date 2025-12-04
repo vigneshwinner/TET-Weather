@@ -134,13 +134,41 @@ def get_forecast():
     else:
         signal = 'FLAT'
     
+    # Get current price from price file
+    current_price = None
+    target_price = None
+    try:
+        price_file = DATA_DIR / 'cleaned_data' / f'{commodity}_3yr.csv'
+        if price_file.exists():
+            # Different commodities have different header formats
+            if commodity in ['Corn', 'Power']:
+                # Corn and Power have 2 header rows
+                price_df = pd.read_csv(price_file, skiprows=2)
+            else:
+                # Brent, Henry_Hub, Copper have 3 header rows (includes empty Date,,,,, line)
+                price_df = pd.read_csv(price_file, skiprows=3)
+                price_df.columns = ['Date', 'Close', 'High', 'Low', 'Open', 'Volume']
+            
+            current_price = float(price_df['Close'].iloc[-1])
+            
+            # Corn is in cents per bushel, convert to dollars
+            if commodity == 'Corn':
+                current_price = current_price / 100.0
+            
+            predicted_return = float(latest['y_pred_ret'])
+            target_price = current_price * (1 + predicted_return)
+    except Exception as e:
+        print(f"Error loading price data for {commodity}: {e}")
+    
     return jsonify({
         'commodity': commodity,
         'date': str(latest[week_col].date()),
         'predicted_return': round(float(latest['y_pred_ret']), 6),
         'direction_probability': round(float(prob), 4),
         'signal': signal,
-        'confidence': round(abs(prob - 0.5) * 2, 4)
+        'confidence': round(abs(prob - 0.5) * 2, 4),
+        'current_price': round(current_price, 2) if current_price else None,
+        'target_price': round(target_price, 2) if target_price else None
     })
 
 

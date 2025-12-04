@@ -127,6 +127,20 @@ function SignalCard({ forecast }) {
             {(forecast.predicted_return * 100).toFixed(2)}%
           </span>
         </div>
+        {forecast.current_price && (
+          <div className="flex justify-between text-sm mt-2">
+            <span className="text-slate-400">Current Price</span>
+            <span className="text-white">${forecast.current_price.toFixed(2)}</span>
+          </div>
+        )}
+        {forecast.target_price && (
+          <div className="flex justify-between text-sm mt-2">
+            <span className="text-slate-400">Target Price</span>
+            <span className={forecast.predicted_return > 0 ? 'text-emerald-400' : 'text-red-400'}>
+              ${forecast.target_price.toFixed(2)}
+            </span>
+          </div>
+        )}
         <div className="flex justify-between text-sm mt-2">
           <span className="text-slate-400">Signal Strength</span>
           <span className="text-white">
