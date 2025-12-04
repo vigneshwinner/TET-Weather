@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-positive: #10b981;
+  --color-negative: #ef4444;
+  --color-neutral: #6b7280;
+}
+
+body {
+  @apply bg-surface-950 text-white antialiased;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-surface-900;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-800 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-surface-200/20;
+}
+
+/* Card styles */
+@layer components {
+  .card {
+    @apply bg-surface-900 rounded-xl border border-surface-800 p-6;
+  }
+  
+  .card-header {
+    @apply text-sm font-medium text-surface-200 uppercase tracking-wide mb-4;
+  }
+  
+  .kpi-value {
+    @apply text-3xl font-bold font-mono;
+  }
+  
+  .kpi-label {
+    @apply text-sm text-surface-200 mt-1;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-brand-600 hover:bg-brand-500 text-white;
+  }
+  
+  .btn-secondary {
+    @apply bg-surface-800 hover:bg-surface-200/20 text-white border border-surface-200/20;
+  }
+  
+  .positive {
+    color: var(--color-positive);
+  }
+  
+  .negative {
+    color: var(--color-negative);
+  }
+  
+  .neutral {
+    color: var(--color-neutral);
+  }
+}
+
+/* Plotly chart overrides */
+.js-plotly-plot .plotly .modebar {
+  @apply bg-transparent;
+}
+
+.js-plotly-plot .plotly .modebar-btn {
+  @apply text-surface-200;
+}
