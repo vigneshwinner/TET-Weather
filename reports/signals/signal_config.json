@@ -1,0 +1,13 @@
+{
+  "policy": "probability",
+  "mag_long_threshold": 0.005,
+  "mag_short_threshold": -0.005,
+  "prob_long_cutoff": 0.55,
+  "prob_short_cutoff": 0.45,
+  "max_position": 1.0,
+  "transaction_cost_bps": 5.0,
+  "slippage_bps": 2.0,
+  "max_gross_exposure": 1.0,
+  "max_turnover_per_week": 2.0,
+  "use_confidence_scaling": true
+}
