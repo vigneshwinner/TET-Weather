@@ -1,0 +1,766 @@
+[
+  {
+    "commodity": "Brent",
+    "type": "gain",
+    "importance": [
+      {
+        "feature": "wind_z_x_crude_prod_delta",
+        "gain": 0.0006997809978201985
+      },
+      {
+        "feature": "precip_z_x_crude_inv_delta",
+        "gain": 0.0005996747058816254
+      },
+      {
+        "feature": "util_delta",
+        "gain": 0.0005377779598347843
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "gain": 0.0005083338473923504
+      },
+      {
+        "feature": "temp_z_lag1_x_natgas_inv_delta",
+        "gain": 0.000506626907736063
+      },
+      {
+        "feature": "precip_z_lag1_x_crude_prod_delta",
+        "gain": 0.0004506275290623307
+      },
+      {
+        "feature": "temp_z_x_gasoline_inv_delta",
+        "gain": 0.0004482354561332613
+      },
+      {
+        "feature": "gasoline_production",
+        "gain": 0.00041760026942938566
+      },
+      {
+        "feature": "gasoline_prod_delta",
+        "gain": 0.00041229798807762563
+      },
+      {
+        "feature": "crude_imports",
+        "gain": 0.00041197793325409293
+      },
+      {
+        "feature": "distillate_inventory",
+        "gain": 0.0003955818247050047
+      },
+      {
+        "feature": "propane_inventory",
+        "gain": 0.0003709604497998953
+      },
+      {
+        "feature": "temp_z_x_natgas_inv_delta",
+        "gain": 0.00036742130760103464
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.00036328050191514194
+      },
+      {
+        "feature": "gasoline_inv_delta",
+        "gain": 0.0003555887087713927
+      },
+      {
+        "feature": "refinery_utilization",
+        "gain": 0.0003549333196133375
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "gain": 0.00035362839116714895
+      },
+      {
+        "feature": "precip_z_x_gasoline_prod_delta",
+        "gain": 0.00034584073000587523
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.0003453496901784092
+      },
+      {
+        "feature": "distillate_production",
+        "gain": 0.00033925645402632654
+      }
+    ]
+  },
+  {
+    "commodity": "Brent",
+    "type": "shap",
+    "importance": [
+      {
+        "feature": "util_delta",
+        "shap_importance": 0.000922230479773134
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "shap_importance": 0.000709386367816478
+      },
+      {
+        "feature": "crude_imports",
+        "shap_importance": 0.0006977251032367349
+      },
+      {
+        "feature": "temp_z_x_gasoline_inv_delta",
+        "shap_importance": 0.0005976064130663872
+      },
+      {
+        "feature": "temp_z_x_gasoline_prod_delta",
+        "shap_importance": 0.0004716141556855291
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.0004651290364563465
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "shap_importance": 0.00040529004763811827
+      },
+      {
+        "feature": "distillate_inv_delta",
+        "shap_importance": 0.0004051119612995535
+      },
+      {
+        "feature": "precip_z_x_crude_inv_delta",
+        "shap_importance": 0.000391072389902547
+      },
+      {
+        "feature": "wind_z_x_crude_prod_delta",
+        "shap_importance": 0.0003889161453116685
+      },
+      {
+        "feature": "distillate_inventory",
+        "shap_importance": 0.0003862259618472308
+      },
+      {
+        "feature": "gasoline_prod_delta",
+        "shap_importance": 0.0003793254145421088
+      },
+      {
+        "feature": "gasoline_production",
+        "shap_importance": 0.00037494799471460283
+      },
+      {
+        "feature": "precip_z_lag1_x_crude_prod_delta",
+        "shap_importance": 0.00035464609391056
+      },
+      {
+        "feature": "temp_z_lag1",
+        "shap_importance": 0.0003422300796955824
+      },
+      {
+        "feature": "crude_inventory",
+        "shap_importance": 0.0003194597375113517
+      },
+      {
+        "feature": "crude_inv_delta",
+        "shap_importance": 0.0003074587439186871
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.0003024335019290447
+      },
+      {
+        "feature": "temp_avg_c_z",
+        "shap_importance": 0.00029739851015619934
+      },
+      {
+        "feature": "natgas_net_change",
+        "shap_importance": 0.00027992279501631856
+      }
+    ]
+  },
+  {
+    "commodity": "Henry_Hub",
+    "type": "gain",
+    "importance": [
+      {
+        "feature": "cdd_weekly_sum",
+        "gain": 0.0069684553891420364
+      },
+      {
+        "feature": "precip_z_lag1",
+        "gain": 0.005371862556785345
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.005095642525702715
+      },
+      {
+        "feature": "precip_z_lag1_x_crude_prod_delta",
+        "gain": 0.004502956755459309
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.004368171561509371
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "gain": 0.0042069824412465096
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.004194155801087618
+      },
+      {
+        "feature": "gasoline_production",
+        "gain": 0.004173247143626213
+      },
+      {
+        "feature": "propane_inventory",
+        "gain": 0.004077006597071886
+      },
+      {
+        "feature": "natgas_net_change",
+        "gain": 0.0040022628381848335
+      },
+      {
+        "feature": "precip_z_x_natgas_inv_delta",
+        "gain": 0.003967977128922939
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "gain": 0.0037554018199443817
+      },
+      {
+        "feature": "temp_z_x_crude_prod_delta",
+        "gain": 0.0037403840105980635
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.003654660889878869
+      },
+      {
+        "feature": "temp_min_z_x_natgas_inv_delta",
+        "gain": 0.003621848300099373
+      },
+      {
+        "feature": "refinery_utilization",
+        "gain": 0.0036129066720604897
+      },
+      {
+        "feature": "crude_inv_delta",
+        "gain": 0.0034915779251605272
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 0.0034561101347208023
+      },
+      {
+        "feature": "temp_z_x_crude_inv_delta",
+        "gain": 0.003441851818934083
+      },
+      {
+        "feature": "temp_z_x_util_delta",
+        "gain": 0.0033926737960428
+      }
+    ]
+  },
+  {
+    "commodity": "Henry_Hub",
+    "type": "shap",
+    "importance": [
+      {
+        "feature": "precipitation_mm_z",
+        "shap_importance": 0.003380468115210533
+      },
+      {
+        "feature": "precip_z_x_natgas_inv_delta",
+        "shap_importance": 0.001549393986351788
+      },
+      {
+        "feature": "refinery_utilization",
+        "shap_importance": 0.0014921885449439287
+      },
+      {
+        "feature": "temp_avg_c_z",
+        "shap_importance": 0.0012665673857554793
+      },
+      {
+        "feature": "distillate_inventory",
+        "shap_importance": 0.0012343934504315257
+      },
+      {
+        "feature": "precip_z_lag1",
+        "shap_importance": 0.001172307995148003
+      },
+      {
+        "feature": "crude_imports",
+        "shap_importance": 0.0011649229563772678
+      },
+      {
+        "feature": "temp_z_lag1_x_crude_inv_delta",
+        "shap_importance": 0.001152143464423716
+      },
+      {
+        "feature": "gasoline_inventory",
+        "shap_importance": 0.001135140541009605
+      },
+      {
+        "feature": "distillate_inv_delta",
+        "shap_importance": 0.0010664055589586496
+      },
+      {
+        "feature": "util_delta",
+        "shap_importance": 0.0010009914403781295
+      },
+      {
+        "feature": "gasoline_inv_delta",
+        "shap_importance": 0.0009990101680159569
+      },
+      {
+        "feature": "gasoline_production",
+        "shap_importance": 0.0009885209146887064
+      },
+      {
+        "feature": "crude_inventory",
+        "shap_importance": 0.0009513002005405724
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.0008162184967659414
+      },
+      {
+        "feature": "temp_z_x_util_delta",
+        "shap_importance": 0.0008154481183737516
+      },
+      {
+        "feature": "distillate_production",
+        "shap_importance": 0.00079230876872316
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.0007690355996601284
+      },
+      {
+        "feature": "crude_production",
+        "shap_importance": 0.0007601100369356573
+      },
+      {
+        "feature": "precip_z_x_gasoline_prod_delta",
+        "shap_importance": 0.0007475366001017392
+      }
+    ]
+  },
+  {
+    "commodity": "Power",
+    "type": "gain",
+    "importance": [
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.6435912251472473
+      },
+      {
+        "feature": "temp_z_x_gasoline_prod_delta",
+        "gain": 0.6069136261940002
+      },
+      {
+        "feature": "temp_z_x_utilization",
+        "gain": 0.5951143503189087
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.5628841519355774
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.47426360845565796
+      },
+      {
+        "feature": "natgas_inv_delta",
+        "gain": 0.4598197340965271
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "gain": 0.4496105909347534
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 0.4373607039451599
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.4011539816856384
+      },
+      {
+        "feature": "temp_z_lag1",
+        "gain": 0.37438830733299255
+      },
+      {
+        "feature": "util_delta",
+        "gain": 0.3656080961227417
+      },
+      {
+        "feature": "gasoline_production",
+        "gain": 0.3615889847278595
+      },
+      {
+        "feature": "temp_z_x_crude_prod_delta",
+        "gain": 0.35045602917671204
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "gain": 0.3485300838947296
+      },
+      {
+        "feature": "gasoline_prod_delta",
+        "gain": 0.3475970923900604
+      },
+      {
+        "feature": "temp_z_x_util_delta",
+        "gain": 0.3411293923854828
+      },
+      {
+        "feature": "temp_max_z_x_utilization",
+        "gain": 0.33959347009658813
+      },
+      {
+        "feature": "temp_z_lag1_x_natgas_inv_delta",
+        "gain": 0.32155153155326843
+      },
+      {
+        "feature": "natgas_net_change",
+        "gain": 0.3170742988586426
+      },
+      {
+        "feature": "crude_inv_delta",
+        "gain": 0.3135586380958557
+      }
+    ]
+  },
+  {
+    "commodity": "Power",
+    "type": "shap",
+    "importance": [
+      {
+        "feature": "hdd_30day_avg",
+        "shap_importance": 0.005237017758190632
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.005166605114936829
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "shap_importance": 0.004244743846356869
+      },
+      {
+        "feature": "temp_z_x_util_delta",
+        "shap_importance": 0.004054573364555836
+      },
+      {
+        "feature": "precip_z_x_crude_prod_delta",
+        "shap_importance": 0.0034700771793723106
+      },
+      {
+        "feature": "util_delta",
+        "shap_importance": 0.003088872879743576
+      },
+      {
+        "feature": "distillate_inv_delta",
+        "shap_importance": 0.003019807394593954
+      },
+      {
+        "feature": "solar_radiation_kwh_m2_z",
+        "shap_importance": 0.0027454381342977285
+      },
+      {
+        "feature": "precipitation_mm_z",
+        "shap_importance": 0.0026138711255043745
+      },
+      {
+        "feature": "temp_z_lag1_x_natgas_inv_delta",
+        "shap_importance": 0.002184148645028472
+      },
+      {
+        "feature": "gasoline_prod_delta",
+        "shap_importance": 0.002102169208228588
+      },
+      {
+        "feature": "precip_z_x_crude_inv_delta",
+        "shap_importance": 0.0020447897259145975
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "shap_importance": 0.0019697733223438263
+      },
+      {
+        "feature": "temp_min_c_z",
+        "shap_importance": 0.00180829968303442
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.001796577824279666
+      },
+      {
+        "feature": "hdd_weekly_sum",
+        "shap_importance": 0.001789528178051114
+      },
+      {
+        "feature": "gasoline_inv_delta",
+        "shap_importance": 0.001714422251097858
+      },
+      {
+        "feature": "temp_min_z_x_natgas_inv_delta",
+        "shap_importance": 0.001638195477426052
+      },
+      {
+        "feature": "temp_z_x_crude_prod_delta",
+        "shap_importance": 0.0016360440058633685
+      },
+      {
+        "feature": "crude_imports",
+        "shap_importance": 0.0015504868933930993
+      }
+    ]
+  },
+  {
+    "commodity": "Copper",
+    "type": "gain",
+    "importance": [
+      {
+        "feature": "hdd_weekly_sum",
+        "gain": 0.00016778222925495356
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "gain": 0.00015570652612950653
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.00014180455764289945
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.00012042991875205189
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "gain": 0.00010845881479326636
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.00010560257214820012
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 8.798945782473311e-05
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 8.628687646705657e-05
+      }
+    ]
+  },
+  {
+    "commodity": "Copper",
+    "type": "shap",
+    "importance": [
+      {
+        "feature": "hdd_weekly_sum",
+        "shap_importance": 0.0016073401784524322
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "shap_importance": 0.000875416852068156
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "shap_importance": 0.0007244407897815108
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "shap_importance": 0.0006339136743918061
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "shap_importance": 0.0005858699441887438
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "shap_importance": 0.0004970794543623924
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "shap_importance": 0.00048616976710036397
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "shap_importance": 0.0003305364225525409
+      },
+      {
+        "feature": "crude_imports",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "refinery_utilization",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "precipitation_mm_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "solar_radiation_kwh_m2_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "crude_inventory",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "crude_production",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "temp_avg_c_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "temp_max_c_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "temp_min_c_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "crude_prod_delta",
+        "shap_importance": 0.0
+      }
+    ]
+  },
+  {
+    "commodity": "Corn",
+    "type": "gain",
+    "importance": [
+      {
+        "feature": "cdd_weekly_sum",
+        "gain": 0.0002973648952320218
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "gain": 0.00019292844808660448
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "gain": 0.00019158613577019423
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "gain": 0.00016978172061499208
+      },
+      {
+        "feature": "cdd_7day_avg",
+        "gain": 0.0001521885278634727
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "gain": 0.00014404610556084663
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "gain": 0.0001360058959107846
+      },
+      {
+        "feature": "hdd_weekly_sum",
+        "gain": 8.311738929478452e-05
+      }
+    ]
+  },
+  {
+    "commodity": "Corn",
+    "type": "shap",
+    "importance": [
+      {
+        "feature": "cdd_7day_avg",
+        "shap_importance": 0.001735241268761456
+      },
+      {
+        "feature": "cdd_weekly_sum",
+        "shap_importance": 0.0016793800750747323
+      },
+      {
+        "feature": "hdd_weekly_sum",
+        "shap_importance": 0.0014566972386091948
+      },
+      {
+        "feature": "hdd_7day_avg",
+        "shap_importance": 0.0013689884217455983
+      },
+      {
+        "feature": "hdd_14day_avg",
+        "shap_importance": 0.0013291328214108944
+      },
+      {
+        "feature": "cdd_30day_avg",
+        "shap_importance": 0.0012227657716721296
+      },
+      {
+        "feature": "cdd_14day_avg",
+        "shap_importance": 0.0010187055449932814
+      },
+      {
+        "feature": "hdd_30day_avg",
+        "shap_importance": 0.0007944609387777746
+      },
+      {
+        "feature": "crude_imports",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "refinery_utilization",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "natgas_inventory",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "precipitation_mm_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "solar_radiation_kwh_m2_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "wind_speed_ms_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "crude_inventory",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "crude_production",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "temp_avg_c_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "temp_max_c_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "temp_min_c_z",
+        "shap_importance": 0.0
+      },
+      {
+        "feature": "crude_prod_delta",
+        "shap_importance": 0.0
+      }
+    ]
+  }
+]
