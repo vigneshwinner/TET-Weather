@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, Legend, AreaChart, Area
+  BarChart, Bar, Legend, AreaChart, Area, ReferenceLine, ScatterChart, Scatter, ComposedChart
 } from 'recharts';
 import { 
   TrendingUp, TrendingDown, Minus, RefreshCw, Activity, 
@@ -27,13 +27,18 @@ async function fetchApi(endpoint) {
 // Components
 // ============================================================================
 
-function Header({ commodity, setCommodity, commodities, onRefresh }) {
+function Header({ commodity, setCommodity, commodities, onRefresh, activeTab, setActiveTab }) {
+  const tabs = [
+    { id: 'dashboard', label: 'Dashboard' },
+    { id: 'analysis', label: 'Analysis' },
+    { id: 'performance', label: 'Performance' }
+  ];
+
   return (
-    <header className="bg-surface-800 border-b border-slate-700 px-6 py-4">
-      <div className="flex items-center justify-between">
+    <header className="bg-surface-800 border-b border-slate-700">
+      <div className="px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-white">TET-Weather</h1>
-          <span className="text-slate-400">Forecast Dashboard</span>
+          <h1 className="text-2xl font-bold text-white">Weather Commodity Forecasting Model</h1>
         </div>
         
         <div className="flex items-center gap-4">
@@ -55,6 +60,23 @@ function Header({ commodity, setCommodity, commodities, onRefresh }) {
             Refresh
           </button>
         </div>
+      </div>
+      
+      {/* Tab Navigation */}
+      <div className="px-6 flex gap-1 border-t border-slate-700">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-6 py-3 font-medium transition-colors ${
+              activeTab === tab.id
+                ? 'text-white border-b-2 border-brand-500'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
     </header>
   );
@@ -88,9 +110,12 @@ function SignalCard({ forecast }) {
         </div>
         
         <div className="text-right">
-          <div className="text-sm text-slate-400">Direction Prob</div>
+          <div className="text-sm text-slate-400">Confidence</div>
           <div className="text-2xl font-semibold text-white">
-            {(forecast.direction_probability * 100).toFixed(1)}%
+            {(Math.abs(forecast.direction_probability - 0.5) * 200).toFixed(1)}%
+          </div>
+          <div className="text-xs text-slate-500">
+            ({(forecast.direction_probability * 100).toFixed(1)}% {forecast.signal})
           </div>
         </div>
       </div>
@@ -103,8 +128,11 @@ function SignalCard({ forecast }) {
           </span>
         </div>
         <div className="flex justify-between text-sm mt-2">
-          <span className="text-slate-400">Confidence</span>
-          <span className="text-white">{(forecast.confidence * 100).toFixed(1)}%</span>
+          <span className="text-slate-400">Signal Strength</span>
+          <span className="text-white">
+            {Math.abs(forecast.direction_probability - 0.5) > 0.15 ? 'Strong' : 
+             Math.abs(forecast.direction_probability - 0.5) > 0.08 ? 'Moderate' : 'Weak'}
+          </span>
         </div>
       </div>
     </div>
@@ -428,6 +456,360 @@ function LoadingCard({ title }) {
 }
 
 // ============================================================================
+// Analysis Components
+// ============================================================================
+
+function PriceAnomalyChart({ commodity }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const result = await fetchApi(`/analysis/price_anomaly?commodity=${commodity}`);
+      if (result) {
+        // Combine data for chart
+        const combined = result.dates.map((date, i) => ({
+          date,
+          price: result.prices[i],
+          temp_anomaly: result.temp_anomaly[i],
+          return: result.returns[i]
+        }));
+        setData({ ...result, combined });
+      }
+      setLoading(false);
+    };
+    loadData();
+  }, [commodity]);
+
+  if (loading || !data) return <LoadingCard title="Price vs Weather Anomalies" />;
+
+  return (
+    <div className="bg-surface-800 rounded-xl p-6 border border-slate-700">
+      <h3 className="text-white font-semibold mb-4">Price vs Temperature Anomaly</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data.combined}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis 
+            dataKey="date" 
+            stroke="#9ca3af" 
+            tick={{ fontSize: 12 }}
+            tickFormatter={(d) => new Date(d).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}
+          />
+          <YAxis yAxisId="left" stroke="#3b82f6" />
+          <YAxis yAxisId="right" orientation="right" stroke="#ef4444" />
+          <Tooltip 
+            contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }}
+            labelStyle={{ color: '#e2e8f0' }}
+          />
+          <Legend />
+          <Line yAxisId="left" type="monotone" dataKey="price" stroke="#3b82f6" name="Price" dot={false} />
+          <Line yAxisId="right" type="monotone" dataKey="temp_anomaly" stroke="#ef4444" name="Temp Anomaly" dot={false} />
+        </LineChart>
+      </ResponsiveContainer>
+      
+      {data.extreme_temp_dates && data.extreme_temp_dates.length > 0 && (
+        <div className="mt-4 text-sm text-slate-400">
+          <span className="text-red-400">🔥</span> Extreme temp events: {data.extreme_temp_dates.length}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AnomalyCorrelationChart({ commodity }) {
+  const [data, setData] = useState(null);
+  const [anomalyType, setAnomalyType] = useState('temp_anomaly');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const result = await fetchApi(`/analysis/anomaly_return_correlation?commodity=${commodity}&anomaly_type=${anomalyType}`);
+      setData(result);
+      setLoading(false);
+    };
+    loadData();
+  }, [commodity, anomalyType]);
+
+  if (loading || !data) return <LoadingCard title="Anomaly vs Return Analysis" />;
+
+  const binData = data.bins.labels.map((label, i) => ({
+    bin: label,
+    mean_return: data.bins.mean_returns[i],
+    std_return: data.bins.std_returns[i],
+    count: data.bins.counts[i]
+  }));
+
+  return (
+    <div className="bg-surface-800 rounded-xl p-6 border border-slate-700">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-white font-semibold">Anomaly Impact on Returns</h3>
+        <select
+          value={anomalyType}
+          onChange={(e) => setAnomalyType(e.target.value)}
+          className="bg-surface-900 border border-slate-600 rounded px-3 py-1 text-sm text-white"
+        >
+          <option value="temp_anomaly">Temperature</option>
+          <option value="precip_anomaly">Precipitation</option>
+          <option value="wind_anomaly">Wind</option>
+        </select>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="bg-surface-900 rounded p-3">
+          <div className="text-slate-400 text-sm">Correlation</div>
+          <div className={`text-2xl font-bold ${data.correlation > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            {data.correlation.toFixed(3)}
+          </div>
+        </div>
+        <div className="bg-surface-900 rounded p-3">
+          <div className="text-slate-400 text-sm">R² Score</div>
+          <div className="text-2xl font-bold text-white">{data.r_squared.toFixed(3)}</div>
+        </div>
+      </div>
+
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={binData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis dataKey="bin" stroke="#9ca3af" tick={{ fontSize: 11 }} />
+          <YAxis stroke="#9ca3af" />
+          <Tooltip 
+            contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }}
+            formatter={(value, name) => [value.toFixed(2) + '%', 'Mean Return']}
+          />
+          <Bar dataKey="mean_return" fill="#3b82f6" />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function RollingMetricsChart({ commodity }) {
+  const [data, setData] = useState(null);
+  const [window, setWindow] = useState(20);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const result = await fetchApi(`/analysis/rolling_metrics?commodity=${commodity}&window=${window}`);
+      if (result) {
+        const combined = result.dates.map((date, i) => ({
+          date,
+          hit_ratio: result.rolling_hit_ratio[i],
+          cumulative: result.cumulative_hit_ratio[i],
+          sharpe: result.rolling_sharpe[i]
+        }));
+        setData({ ...result, combined });
+      }
+      setLoading(false);
+    };
+    loadData();
+  }, [commodity, window]);
+
+  if (loading || !data) return <LoadingCard title="Rolling Performance Metrics" />;
+
+  return (
+    <div className="bg-surface-800 rounded-xl p-6 border border-slate-700">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-white font-semibold">Rolling Hit Ratio</h3>
+        <select
+          value={window}
+          onChange={(e) => setWindow(Number(e.target.value))}
+          className="bg-surface-900 border border-slate-600 rounded px-3 py-1 text-sm text-white"
+        >
+          <option value="10">10 weeks</option>
+          <option value="20">20 weeks</option>
+          <option value="30">30 weeks</option>
+          <option value="50">50 weeks</option>
+        </select>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="bg-surface-900 rounded p-3">
+          <div className="text-slate-400 text-sm">Overall</div>
+          <div className={`text-xl font-bold ${data.overall_hit_ratio > 50 ? 'text-emerald-400' : 'text-red-400'}`}>
+            {data.overall_hit_ratio.toFixed(1)}%
+          </div>
+        </div>
+        <div className="bg-surface-900 rounded p-3">
+          <div className="text-slate-400 text-sm">Best {window}w</div>
+          <div className="text-xl font-bold text-emerald-400">{data.best_rolling_hit_ratio.toFixed(1)}%</div>
+        </div>
+        <div className="bg-surface-900 rounded p-3">
+          <div className="text-slate-400 text-sm">Worst {window}w</div>
+          <div className="text-xl font-bold text-red-400">{data.worst_rolling_hit_ratio.toFixed(1)}%</div>
+        </div>
+      </div>
+
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart data={data.combined}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis 
+            dataKey="date" 
+            stroke="#9ca3af" 
+            tick={{ fontSize: 12 }}
+            tickFormatter={(d) => new Date(d).toLocaleDateString('en-US', { month: 'short' })}
+          />
+          <YAxis stroke="#9ca3af" domain={[0, 100]} />
+          <Tooltip 
+            contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }}
+            formatter={(value) => value?.toFixed(1) + '%'}
+          />
+          <Legend />
+          <Line type="monotone" dataKey="hit_ratio" stroke="#3b82f6" name={`${window}-Week Rolling`} dot={false} />
+          <Line type="monotone" dataKey="cumulative" stroke="#10b981" name="Cumulative" dot={false} strokeDasharray="5 5" />
+          <ReferenceLine y={50} stroke="#ef4444" strokeDasharray="3 3" label="Random (50%)" />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function MultiCommodityComparison() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const result = await fetchApi('/analysis/multi_commodity_comparison');
+      setData(result);
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+  if (loading || !data) return <LoadingCard title="Multi-Commodity Comparison" />;
+
+  return (
+    <div className="bg-surface-800 rounded-xl p-6 border border-slate-700">
+      <h3 className="text-white font-semibold mb-4">Commodity Performance Comparison</h3>
+      
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <h4 className="text-slate-400 text-sm mb-3">Hit Ratio</h4>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data.comparison}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <XAxis dataKey="commodity" stroke="#9ca3af" tick={{ fontSize: 11 }} />
+              <YAxis stroke="#9ca3af" domain={[0, 100]} />
+              <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+              <Bar dataKey="hit_ratio" fill="#3b82f6" />
+              <ReferenceLine y={50} stroke="#ef4444" strokeDasharray="3 3" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div>
+          <h4 className="text-slate-400 text-sm mb-3">Sharpe Ratio</h4>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data.comparison}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <XAxis dataKey="commodity" stroke="#9ca3af" tick={{ fontSize: 11 }} />
+              <YAxis stroke="#9ca3af" />
+              <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+              <Bar dataKey="sharpe" fill="#10b981" />
+              <ReferenceLine y={0} stroke="#ef4444" strokeDasharray="3 3" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="mt-6 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-slate-700">
+              <th className="text-left py-2 text-slate-400">Commodity</th>
+              <th className="text-right py-2 text-slate-400">Hit Ratio</th>
+              <th className="text-right py-2 text-slate-400">MAE</th>
+              <th className="text-right py-2 text-slate-400">Sharpe</th>
+              <th className="text-right py-2 text-slate-400">Final PnL</th>
+              <th className="text-right py-2 text-slate-400">Predictions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.comparison.map(row => (
+              <tr key={row.commodity} className="border-b border-slate-700/50">
+                <td className="py-2 text-white font-medium">{row.commodity}</td>
+                <td className={`py-2 text-right ${row.hit_ratio > 50 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {row.hit_ratio.toFixed(1)}%
+                </td>
+                <td className="py-2 text-right text-slate-300">{row.mae.toFixed(4)}</td>
+                <td className={`py-2 text-right ${row.sharpe > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {row.sharpe.toFixed(2)}
+                </td>
+                <td className={`py-2 text-right ${row.final_pnl > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {row.final_pnl.toFixed(2)}
+                </td>
+                <td className="py-2 text-right text-slate-400">{row.total_predictions}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function RegimePerformanceChart({ commodity }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const result = await fetchApi(`/analysis/regime_performance?commodity=${commodity || ''}`);
+      setData(result);
+      setLoading(false);
+    };
+    loadData();
+  }, [commodity]);
+
+  if (loading || !data) return <LoadingCard title="Regime Performance" />;
+
+  return (
+    <div className="bg-surface-800 rounded-xl p-6 border border-slate-700">
+      <h3 className="text-white font-semibold mb-4">Performance by Market Regime</h3>
+      
+      <div className="mb-4 text-sm text-slate-400">
+        <span className="font-medium">Volatility Thresholds:</span> Low/Med: {data.thresholds.low_medium.toFixed(4)} | Med/High: {data.thresholds.medium_high.toFixed(4)}
+      </div>
+
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={data.regimes}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+          <XAxis dataKey="regime" stroke="#9ca3af" tick={{ fontSize: 11 }} />
+          <YAxis stroke="#9ca3af" domain={[0, 100]} />
+          <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #475569' }} />
+          <Legend />
+          <Bar dataKey="hit_ratio" fill="#3b82f6" name="Hit Ratio %" />
+          <ReferenceLine y={50} stroke="#ef4444" strokeDasharray="3 3" />
+        </BarChart>
+      </ResponsiveContainer>
+
+      <div className="mt-4 grid grid-cols-3 gap-4">
+        {data.regimes.map(regime => (
+          <div key={regime.regime} className="bg-surface-900 rounded p-3">
+            <div className="text-slate-400 text-sm">{regime.regime}</div>
+            <div className="text-lg font-bold text-white">{regime.hit_ratio.toFixed(1)}%</div>
+            <div className="text-sm text-slate-500">{regime.count} periods</div>
+            <div className={`text-sm ${regime.sharpe > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+              Sharpe: {regime.sharpe.toFixed(2)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// End Analysis Components
+// ============================================================================
+
+// ============================================================================
 // Main App
 // ============================================================================
 
@@ -441,6 +823,7 @@ export default function App() {
   const [evaluation, setEvaluation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(null);
+  const [activeTab, setActiveTab] = useState('dashboard');
   
   const loadData = async () => {
     setLoading(true);
@@ -481,39 +864,66 @@ export default function App() {
         setCommodity={setCommodity}
         commodities={commodities}
         onRefresh={handleRefresh}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
       />
       
       <main className="p-6">
-        {/* Top Row: Signal + Performance */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          <SignalCard forecast={forecast} />
-          <div className="lg:col-span-2">
-            <PerformancePanel metrics={metrics} commodity={commodity} />
+        {activeTab === 'dashboard' && (
+          <>
+            {/* Top Row: Signal + Performance Summary */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+              <SignalCard forecast={forecast} />
+              <div className="lg:col-span-2">
+                <PerformancePanel metrics={metrics} commodity={commodity} />
+              </div>
+            </div>
+            
+            {/* Middle Row: Equity Curve + Signal History */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <EquityCurveChart curves={curves} commodity={commodity} />
+              <SignalHistoryChart signals={signals} />
+            </div>
+            
+            {/* All Commodities Comparison */}
+            <div className="mb-6">
+              <AllCommoditiesChart curves={curves} />
+            </div>
+          </>
+        )}
+
+        {activeTab === 'analysis' && (
+          <div className="space-y-6">
+            {/* Weather Impact Analysis */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <PriceAnomalyChart commodity={commodity} />
+              <AnomalyCorrelationChart commodity={commodity} />
+            </div>
+            
+            {/* Multi-Commodity Comparison */}
+            <MultiCommodityComparison />
           </div>
-        </div>
-        
-        {/* Middle Row: Equity Curve + Signal History */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <EquityCurveChart curves={curves} commodity={commodity} />
-          <SignalHistoryChart signals={signals} />
-        </div>
-        
-        {/* All Commodities Comparison */}
-        <div className="mb-6">
-          <AllCommoditiesChart curves={curves} />
-        </div>
-        
-        {/* Model Evaluation Table */}
-        <div className="mb-6">
-          <ModelEvaluationTable evaluation={evaluation} />
-        </div>
+        )}
+
+        {activeTab === 'performance' && (
+          <div className="space-y-6">
+            {/* Model Accuracy Metrics */}
+            <ModelEvaluationTable evaluation={evaluation} />
+            
+            {/* Performance Deep Dive */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <RollingMetricsChart commodity={commodity} />
+              <RegimePerformanceChart commodity={commodity} />
+            </div>
+          </div>
+        )}
         
         {/* Footer */}
         <footer className="text-center text-slate-500 text-sm mt-8">
           {lastUpdate && (
             <p>Last updated: {lastUpdate.toLocaleTimeString()}</p>
           )}
-          <p className="mt-1">TET-Weather Forecast Dashboard v1.0</p>
+          <p className="mt-1">Weather Commodity Forecasting Model v1.0</p>
         </footer>
       </main>
     </div>
