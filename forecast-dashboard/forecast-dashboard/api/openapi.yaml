@@ -1,0 +1,286 @@
+openapi: 3.0.3
+info:
+  title: Forecast Dashboard API
+  description: API for serving predictions, SSI, and backtest data
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: http://localhost:5000
+    description: Development server
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags: [System]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+
+  /commodities:
+    get:
+      summary: List supported commodities
+      tags: [Commodities]
+      responses:
+        '200':
+          description: List of commodity tickers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  commodities:
+                    type: array
+                    items:
+                      type: string
+                    example: ["NG", "CL", "HO", "RB", "ERCOT"]
+                  count:
+                    type: integer
+
+  /forecast:
+    get:
+      summary: Get forecast for a commodity
+      tags: [Forecasts]
+      parameters:
+        - name: commodity
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Ticker symbol (e.g., NG, CL)
+        - name: week
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Target week (YYYY-MM-DD), defaults to next week
+      responses:
+        '200':
+          description: Forecast data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forecast'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /ssi:
+    get:
+      summary: Get SSI time series
+      tags: [SSI]
+      parameters:
+        - name: commodity
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: start
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Start date, defaults to 1 year ago
+        - name: end
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: End date, defaults to today
+      responses:
+        '200':
+          description: SSI time series
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSIResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /backtest/summary:
+    get:
+      summary: Get backtest summary
+      tags: [Backtest]
+      parameters:
+        - name: commodity
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Backtest metrics and equity curve
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BacktestSummary'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /simulate:
+    post:
+      summary: Run scenario simulation
+      tags: [Simulation]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - commodity
+              properties:
+                commodity:
+                  type: string
+                scenario:
+                  type: object
+      responses:
+        '200':
+          description: Simulation results
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+components:
+  schemas:
+    Forecast:
+      type: object
+      properties:
+        commodity:
+          type: string
+        week:
+          type: string
+          format: date
+        predicted_return:
+          type: number
+          format: float
+        direction_probability:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        confidence:
+          type: number
+          format: float
+        model_version:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+
+    SSIResponse:
+      type: object
+      properties:
+        commodity:
+          type: string
+        start:
+          type: string
+          format: date
+        end:
+          type: string
+          format: date
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SSIPoint'
+        count:
+          type: integer
+
+    SSIPoint:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        ssi_value:
+          type: number
+        components:
+          type: object
+          additionalProperties:
+            type: number
+
+    BacktestSummary:
+      type: object
+      properties:
+        commodity:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/BacktestMetrics'
+        equity_curve:
+          type: array
+          items:
+            $ref: '#/components/schemas/EquityPoint'
+        last_updated:
+          type: string
+          format: date-time
+
+    BacktestMetrics:
+      type: object
+      properties:
+        total_return:
+          type: number
+        sharpe_ratio:
+          type: number
+        max_drawdown:
+          type: number
+        win_rate:
+          type: number
+        volatility:
+          type: number
+        num_trades:
+          type: integer
+
+    EquityPoint:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        value:
+          type: number
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        status_code:
+          type: integer
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
